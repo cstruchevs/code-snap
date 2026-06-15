@@ -67,6 +67,7 @@ AI explanation via Supabase Edge Function (Deno) calling Claude API.
 - useRealtimeLikes: subscribe on mount, update local count, unsubscribe on unmount
 - Shiki: import singleton from lib/shiki.ts (don't create new highlighter per render)
 - Code editor: textarea with monospace font (no heavy libs — this is a small project)
+- NEVER use `<img>` — always use `<Image />` from next/image. Add external domains to next.config.ts → images.remotePatterns (e.g. avatars.githubusercontent.com for GitHub avatars)
 - No any types, strict TypeScript
 
 ### @edge-agent

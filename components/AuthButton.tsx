@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { useUser } from '@/hooks/useUser';
 
@@ -15,10 +16,12 @@ export function AuthButton() {
     return (
       <div className="flex items-center gap-3">
         {user.user_metadata?.avatar_url && (
-          <img
+          <Image
             src={user.user_metadata.avatar_url}
             alt={user.user_metadata.user_name ?? 'avatar'}
-            className="h-7 w-7 rounded-full"
+            width={28}
+            height={28}
+            className="rounded-full"
           />
         )}
         <span className="text-sm text-gray-700">{user.user_metadata?.user_name}</span>

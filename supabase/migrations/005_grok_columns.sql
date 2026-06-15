@@ -1,0 +1,2 @@
+ALTER TABLE snippets ADD COLUMN IF NOT EXISTS grok_explanation  TEXT;
+ALTER TABLE snippets ADD COLUMN IF NOT EXISTS grok_explained_at TIMESTAMPTZ;
