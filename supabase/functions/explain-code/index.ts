@@ -99,8 +99,9 @@ Deno.serve(async (req) => {
     const stream = await anthropic.messages.stream({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 300,
+      system: SYSTEM_PROMPT(language),
       messages: [
-        { role: 'user', content: `${SYSTEM_PROMPT(language)}\n\n${userMessage}` },
+        { role: 'user', content: userMessage },
       ],
     });
 

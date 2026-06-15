@@ -61,9 +61,9 @@ const CONFIG: Record<Provider, {
 };
 
 export function AiExplanation({ snippetId, provider, initialExplanation, initialExplainedAt }: AiExplanationProps) {
-  const { user } = useUser();
+  const { user, loading } = useUser();
   const [explanation, setExplanation] = useState(initialExplanation ?? null);
-  const [explainedAt] = useState(initialExplainedAt ?? null);
+  const [explainedAt, setExplainedAt] = useState(initialExplainedAt ?? null);
   const cfg = CONFIG[provider];
 
   const isCached = useMemo(
@@ -75,10 +75,24 @@ export function AiExplanation({ snippetId, provider, initialExplanation, initial
   );
 
   const explain = trpc.snippet.explainCode.useMutation({
-    onSuccess: (data) => setExplanation(data.explanation),
+    onSuccess: (data) => {
+      setExplanation(data.explanation);
+      setExplainedAt(new Date().toISOString());
+    },
   });
 
   const Icon = cfg.icon;
+
+  if (loading) {
+    return (
+      <div className={`rounded-xl border ${cfg.border} ${cfg.bg} px-4 py-3 animate-pulse`}>
+        <div className="flex items-center gap-2">
+          <Icon />
+          <div className={`h-3 w-32 rounded ${cfg.badgeBg} opacity-50`} />
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (

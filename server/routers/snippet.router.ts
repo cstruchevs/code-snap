@@ -220,7 +220,7 @@ export const snippetRouter = router({
 
       const { data: snippet } = await ctx.supabase
         .from('snippets')
-        .select(`code, language, ai_explanation, ai_explained_at, grok_explanation, grok_explained_at`)
+        .select(`code, storage_key, language, ai_explanation, ai_explained_at, grok_explanation, grok_explained_at`)
         .eq('id', input.snippetId)
         .single();
 
@@ -236,6 +236,11 @@ export const snippetRouter = router({
         }
       }
 
+      // resolve actual code — may be in Storage if the snippet was large
+      const code = snippet.storage_key
+        ? await downloadCodeFile(ctx.supabase, snippet.storage_key)
+        : snippet.code;
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/explain-code`,
         {
@@ -244,7 +249,7 @@ export const snippetRouter = router({
             'Content-Type': 'application/json',
             Authorization: `Bearer ${process.env.EDGE_FUNCTION_SECRET}`,
           },
-          body: JSON.stringify({ code: snippet.code, language: snippet.language, provider }),
+          body: JSON.stringify({ code, language: snippet.language, provider }),
         }
       );
 
